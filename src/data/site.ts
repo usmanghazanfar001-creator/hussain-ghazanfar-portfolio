@@ -14,7 +14,7 @@ export const site = {
   role: 'Architectural Designer',
   specialties: ['AutoCAD 2D & 3D Designer', 'Map Planner', 'Site Planning Specialist'],
   /** Production URL. Also set VITE_SITE_URL in .env (used for sitemap, canonical, Open Graph). */
-  url: (import.meta.env.VITE_SITE_URL as string | undefined) ?? 'https://www.example.com',
+  url: (import.meta.env.VITE_SITE_URL as string | undefined) ?? 'https://hussnainghazanfar.vercel.app/',
   seo: {
     titleSuffix: 'Architecture & AutoCAD Designer',
     description:

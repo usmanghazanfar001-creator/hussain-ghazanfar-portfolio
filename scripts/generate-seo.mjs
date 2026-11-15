@@ -13,7 +13,7 @@ function readEnvUrl() {
     const m = env.match(/^VITE_SITE_URL=(.+)$/m);
     if (m) return m[1].trim();
   } catch {}
-  return 'https://www.example.com';
+  return 'https://hussnainghazanfar.vercel.app/';
 }
 
 const site = readEnvUrl().replace(/\/$/, '');
