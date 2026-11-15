@@ -1,8 +1,60 @@
 
-<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
     <loc>https://hussnainghazanfar.vercel.app/</loc>
-    <lastmod>2026-11-15</lastmod>
   </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/residence-concept</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/commercial-facade-study</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/floor-plan-set</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/elevation-section-package</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/massing-model-study</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/interior-visualization</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/housing-scheme-layout</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/road-network-study</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/mixed-use-master-plan</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/landscape-open-space-plan</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/furnished-3d-floor-plan</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/urban-massing-model</loc>
+  </url>
+
+  <url>
+    <loc>https://hussnainghazanfar.vercel.app/projects/construction-visualization</loc>
+  </url>
+
 </urlset>
