@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#F5F3EF" />
+    <meta name="google-site-verification" content="BqNkTFVphyxR33cNquo0O0bsuckTijAfewo8eEby4zY" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="Hussain Ghazanfar" />
+    <meta name="keywords" content="architectural designer, AutoCAD 2D drafting, AutoCAD 3D modeling, site planning, map planning, master planning, floor plans" />
 
     <title>Hussain Ghazanfar | Architecture &amp; AutoCAD Designer</title>
     <meta
@@ -22,14 +26,24 @@
     />
     <meta property="og:url" content="%VITE_SITE_URL%/" />
     <meta property="og:image" content="%VITE_SITE_URL%/assets/brand/og-image.png" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Hussain Ghazanfar logo: HG monogram with architecture, CAD design and map planning" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hussain Ghazanfar | Architecture &amp; AutoCAD Designer" />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/assets/brand/og-image.png" />
 
     <!-- Icons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/icons/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="256x256" href="/assets/icons/favicon-256.png" />
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Hero image: fetched early for a faster Largest Contentful Paint -->
+    <link rel="preload" as="image" href="/assets/hero/hero-sm.webp" imagesrcset="/assets/hero/hero-sm.webp 800w, /assets/hero/hero.webp 1600w" imagesizes="100vw" fetchpriority="high" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -43,6 +57,14 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
+        "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "Hussain Ghazanfar | Architecture & AutoCAD Designer",
+        "url": "%VITE_SITE_URL%/",
+        "inLanguage": "en"
+      },
+      {
         "@type": "Person",
         "name": "Hussain Ghazanfar",
         "jobTitle": "Architectural Designer and AutoCAD Designer",
@@ -56,6 +78,8 @@
           "Site planning",
           "Map planning",
           "Master planning"
+        ]
+      }
         ]
       }
     </script>

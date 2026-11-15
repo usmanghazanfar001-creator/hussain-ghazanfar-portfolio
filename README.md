@@ -71,9 +71,20 @@ vercel --prod     # production
 - [ ] Add `sameAs` (LinkedIn etc.) to the JSON-LD in `index.html` once profiles are verified.
 - [ ] Run Lighthouse on the deployed URL.
 
+## Supplied reference images
+The six images you supplied are in use as **sample** content (optimized WebP, with `-sm` variants for mobile): modern residence (hero + Residential Concept), urban massing model, construction collage, furnished 3D plan, dark 2D plan, and reference 2D plan. They are still flagged `placeholder: true` in `src/data/projects.ts`. Before launch, confirm you own them or have commercial rights. The dark 2D plan carries a visible third-party studio watermark ("STHAAYI") and the reference plan has a "REFERENCE SKETCH" title block — replace both with your own drawings.
+
+## Showreel videos
+Two supplied clips are compressed in `public/assets/video/` and listed in `src/data/videos.ts` (lazy-loaded; they only download when played). Both are flagged as samples. The AutoCAD clip shows a third-party "YouTube: adamdereli" credit, so replace it with your own recording unless you have permission to publish it.
+
+## Favicon
+Circular favicons are in `public/assets/icons/` plus `public/favicon.ico`. The Apple touch icon is intentionally square because iOS applies its own mask.
+
+## Google Search Console
+The verification meta tag is already in `index.html`. After deploying, verify in Search Console, then submit `https://YOUR-DOMAIN/sitemap.xml`.
+
 ## Notes
 - **SEO:** `index.html` carries full static metadata + Person JSON-LD (only verified facts). Per-page title/description/canonical/Open Graph are set at runtime by `Seo.tsx`. Because this is a client-rendered SPA, social-media crawlers read only the static `index.html` tags; if per-project link previews matter, add pre-rendering later.
 - **Contrast:** the brief's muted `#858585` and accent `#B69A70` are too light for small text on `#F5F3EF`, so the site uses darker tones (`muted-strong #666`, `accent-deep #7E6540`) for small text and keeps the original colors for large/decorative use.
 - **Fonts** load from Google Fonts (Cormorant Garamond, Inter, IBM Plex Mono). Self-host via `@fontsource` if you need zero third-party requests.
 - Animations respect `prefers-reduced-motion`.
-"# hussain-ghazanfar-portfolio" 

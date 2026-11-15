@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import type { ImageAsset } from '../data/assets';
+import { srcSetOf, type ImageAsset } from '../data/assets';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -33,13 +33,15 @@ interface RevealImageProps {
   imgClassName?: string;
   sizes?: string;
   eager?: boolean;
+  /** 'contain' shows tall drawings (floor plans) uncropped on a paper background. */
+  fit?: 'cover' | 'contain';
 }
 
 /** Masked "curtain" reveal for images; the wrapper's aspect ratio is set via className. */
-export function RevealImage({ image, className = '', imgClassName = '', sizes, eager }: RevealImageProps) {
+export function RevealImage({ image, className = '', imgClassName = '', sizes, eager, fit = 'cover' }: RevealImageProps) {
   const reduce = useReducedMotion();
   return (
-    <span className={`relative block overflow-hidden bg-line ${className}`}>
+    <span className={`relative block overflow-hidden ${fit === 'contain' ? 'bg-surface' : 'bg-line'} ${className}`}>
       <motion.span
         className="block h-full w-full"
         initial={reduce ? false : { clipPath: 'inset(0 0 100% 0)' }}
@@ -49,14 +51,16 @@ export function RevealImage({ image, className = '', imgClassName = '', sizes, e
       >
         <motion.img
           src={image.src}
-          srcSet={image.srcSmall ? `${image.srcSmall} 720w, ${image.src} ${image.width}w` : undefined}
+          srcSet={srcSetOf(image)}
           sizes={sizes}
           alt={image.alt}
           width={image.width}
           height={image.height}
           loading={eager ? 'eager' : 'lazy'}
+          fetchPriority={eager ? 'high' : undefined}
           decoding="async"
-          className={`h-full w-full object-cover ${imgClassName}`}
+          style={{ objectPosition: fit === 'cover' ? image.position : undefined }}
+          className={`h-full w-full ${fit === 'contain' ? 'object-contain' : 'object-cover'} ${imgClassName}`}
           initial={reduce ? false : { scale: 1.12 }}
           whileInView={{ scale: 1 }}
           viewport={{ once: true, margin: '-60px' }}

@@ -1,7 +1,9 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { hero } from '../data/assets';
+import { srcSetOf } from '../data/assets';
 import { heroCopy, site } from '../data/site';
+import { SplitChars } from './AnimatedText';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -17,17 +19,21 @@ export default function Hero() {
     <section id="top" className="relative isolate min-h-[100svh] overflow-hidden bg-ink text-paper" data-dark>
       <motion.img
         src={hero.src}
+        srcSet={srcSetOf(hero)}
+        sizes="100vw"
+        fetchPriority="high"
         alt={hero.alt}
         width={hero.width}
         height={hero.height}
         loading="eager"
         decoding="async"
         className="absolute inset-0 -z-20 h-full w-full object-cover"
+        style={{ objectPosition: hero.position }}
         initial={reduce ? false : { scale: 1.1 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2.4, ease }}
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/85 via-ink/45 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/10" aria-hidden="true" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-transparent to-ink/50" aria-hidden="true" />
 
       <div className="container-page flex min-h-[100svh] flex-col justify-end pb-12 pt-36 md:pb-16">
@@ -36,17 +42,10 @@ export default function Hero() {
           {heroCopy.eyebrow}
         </motion.p>
 
-        <h1 className="font-display text-[clamp(3.2rem,10vw,9rem)] font-medium leading-[0.9] tracking-tight">
+        <h1 className="font-display text-[clamp(3.2rem,10vw,9rem)] font-medium leading-[0.9] tracking-tight" aria-label={heroCopy.headline.join(' ')}>
           {heroCopy.headline.map((line, i) => (
-            <span key={line} className="block overflow-hidden pb-[0.08em]">
-              <motion.span
-                className={`block ${i === 1 ? 'italic text-accent' : ''}`}
-                initial={reduce ? false : { y: '110%' }}
-                animate={{ y: 0 }}
-                transition={{ duration: 1.1, delay: 0.35 + i * 0.15, ease }}
-              >
-                {line}
-              </motion.span>
+            <span key={line} aria-hidden="true" className={`block pb-[0.08em] ${i === 1 ? 'italic' : ''}`}>
+              <SplitChars text={line} delay={0.35 + i * 0.35} charClassName={i === 1 ? 'text-shimmer' : ''} />
             </span>
           ))}
         </h1>

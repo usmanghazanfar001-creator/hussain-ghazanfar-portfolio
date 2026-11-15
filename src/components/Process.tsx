@@ -6,7 +6,7 @@ export default function Process() {
   return (
     <section id="process" className="bg-ink py-28 text-paper md:py-40" data-dark>
       <div className="container-page">
-        <SectionHeading index="04" label="Design Process" title="From first sketch to final presentation." dark />
+        <SectionHeading index="05" label="Design Process" title="From first sketch to final presentation." dark />
 
         <ol className="relative mt-24 grid gap-14 lg:grid-cols-5 lg:gap-8">
           <span className="absolute left-[7px] top-2 hidden h-[calc(100%-1rem)] w-px bg-paper/20 max-lg:block" aria-hidden="true" />

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
+import { srcSetOf } from '../data/assets';
 import { categoryLabel, type Project } from '../data/projects';
 
 interface Props {
@@ -16,6 +17,9 @@ export default function ProjectCard({ project, index, aspect = 'aspect-[4/3]' }:
       <Link to={to} tabIndex={-1} aria-hidden="true" className={`relative block overflow-hidden bg-line ${aspect}`}>
         <img
           src={main.src}
+          srcSet={srcSetOf(main)}
+          sizes="(min-width:1024px) 55vw, 100vw"
+          style={{ objectPosition: main.position }}
           alt=""
           width={main.width}
           height={main.height}

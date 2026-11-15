@@ -36,7 +36,9 @@ export default function Seo({ title, description = site.seo.description, path = 
     const base = site.url.replace(/\/$/, '');
     const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.seo.titleSuffix}`;
     const url = `${base}${path === '/' ? '/' : path}`;
-    const abs = image.startsWith('http') ? image : `${base}${image}`;
+    // Social crawlers need a raster image: fall back to the brand card for SVG placeholders.
+    const raster = image.endsWith('.svg') ? brand.og : image;
+    const abs = raster.startsWith('http') ? raster : `${base}${raster}`;
 
     document.title = fullTitle;
     setMeta('name', 'description', description);
@@ -45,6 +47,10 @@ export default function Seo({ title, description = site.seo.description, path = 
     setMeta('property', 'og:url', url);
     setMeta('property', 'og:image', abs);
     setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', fullTitle);
+    setMeta('name', 'twitter:description', description);
+    setMeta('name', 'twitter:image', abs);
+    setMeta('name', 'robots', path === '/404' ? 'noindex, follow' : 'index, follow, max-image-preview:large');
     setCanonical(url);
 
     let script: HTMLScriptElement | null = null;

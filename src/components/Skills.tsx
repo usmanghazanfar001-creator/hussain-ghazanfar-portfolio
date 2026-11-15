@@ -8,7 +8,7 @@ export default function Skills() {
   return (
     <section id="skills" className="bg-surface py-28 md:py-40">
       <div className="container-page">
-        <SectionHeading index="05" label="Software & Skills" title="The tools and disciplines behind the drawings." />
+        <SectionHeading index="06" label="Software & Skills" title="The tools and disciplines behind the drawings." />
 
         <ul className="mt-20 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
           {skills.map((s, i) => {

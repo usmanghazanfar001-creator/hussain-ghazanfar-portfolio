@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Maximize2 } from 'lucide-react';
 import Lightbox, { type LightboxItem } from '../components/Lightbox';
 import { Reveal, RevealImage } from '../components/Reveal';
 import Seo from '../components/Seo';
+import { site } from '../data/site';
 import { categoryLabel, getProject, projects, type Project } from '../data/projects';
 import NotFound from './NotFound';
 
@@ -42,10 +43,33 @@ export default function ProjectPage() {
   const prev = projects[(i - 1 + projects.length) % projects.length];
   const next = projects[(i + 1) % projects.length];
   let offset = 1;
+  const tallMain = project.images.main.height > project.images.main.width * 1.1;
+  const base = site.url.replace(/\/$/, '');
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${base}/` },
+          { '@type': 'ListItem', position: 2, name: 'Projects', item: `${base}/#projects` },
+          { '@type': 'ListItem', position: 3, name: project.title, item: `${base}/projects/${project.slug}` },
+        ],
+      },
+      {
+        '@type': 'CreativeWork',
+        name: project.title,
+        description: project.summary,
+        genre: categoryLabel(project.category),
+        creator: { '@type': 'Person', name: site.name },
+        image: `${base}${project.images.main.src}`,
+      },
+    ],
+  };
 
   return (
     <article>
-      <Seo title={project.title} description={project.summary} path={`/projects/${project.slug}`} image={project.images.main.src} />
+      <Seo title={project.title} description={project.summary} path={`/projects/${project.slug}`} image={project.images.main.src} jsonLd={jsonLd} />
 
       <header className="container-page pb-12 pt-32 md:pt-40">
         <Link to={{ pathname: '/', hash: '#projects' }} className="label inline-flex items-center gap-2 text-muted-strong transition-colors hover:text-ink">
@@ -68,7 +92,13 @@ export default function ProjectPage() {
           className="group relative block w-full overflow-hidden bg-line"
           aria-label={`Open ${project.title} main image full screen`}
         >
-          <RevealImage image={project.images.main} eager sizes="100vw" className="aspect-[16/9] w-full md:aspect-[16/8]" />
+          <RevealImage
+            image={project.images.main}
+            eager
+            sizes="100vw"
+            fit={tallMain ? 'contain' : 'cover'}
+            className={tallMain ? 'aspect-[4/5] w-full md:aspect-[16/9]' : 'aspect-[16/9] w-full md:aspect-[16/8]'}
+          />
           <span className="label absolute bottom-4 right-4 flex items-center gap-2 bg-paper px-3 py-2 text-ink opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
             <Maximize2 size={14} aria-hidden="true" /> Full screen
           </span>
@@ -129,6 +159,7 @@ export default function ProjectPage() {
                       <RevealImage
                         image={it.image}
                         sizes="(min-width:768px) 50vw, 100vw"
+                        fit={it.image.height > it.image.width * 1.1 ? 'contain' : 'cover'}
                         className="aspect-[16/10] w-full border border-line"
                         imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                       />

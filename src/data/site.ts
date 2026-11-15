@@ -73,6 +73,7 @@ export const navLinks = [
   { label: 'About', hash: 'about' },
   { label: 'Services', hash: 'services' },
   { label: 'Projects', hash: 'projects' },
+  { label: 'Showreel', hash: 'showreel' },
   { label: 'Process', hash: 'process' },
   { label: 'Skills', hash: 'skills' },
   { label: 'Contact', hash: 'contact' },

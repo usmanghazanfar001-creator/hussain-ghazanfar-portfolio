@@ -105,7 +105,7 @@ export default function Contact() {
     <section id="contact" className="bg-ink py-28 text-paper md:py-40" data-dark>
       <div className="container-page grid gap-16 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <SectionHeading index="06" label="Contact" title={contact.heading} dark>
+          <SectionHeading index="07" label="Contact" title={contact.heading} dark>
             <p className="mt-8 max-w-md text-lg leading-relaxed text-paper/75">{contact.text}</p>
           </SectionHeading>
 

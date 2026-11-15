@@ -15,9 +15,27 @@ export interface ImageAsset {
   /** Intrinsic size, used to reserve layout space (prevents layout shift). */
   width: number;
   height: number;
-  /** Optional smaller version for small screens. */
+  /** Optional smaller version for small screens, and its pixel width (for srcset). */
   srcSmall?: string;
+  smallWidth?: number;
+  /** CSS object-position used when the image is cropped (e.g. '50% 20%'). */
+  position?: string;
 }
+
+/** Builds a responsive srcset string when a small variant exists. */
+export const srcSetOf = (i: ImageAsset) =>
+  i.srcSmall ? `${i.srcSmall} ${i.smallWidth ?? 720}w, ${i.src} ${i.width}w` : undefined;
+
+/** Helper for optimized WebP files that have a `-sm.webp` sibling. */
+const webp = (base: string, alt: string, width: number, height: number, smallWidth: number, position?: string): ImageAsset => ({
+  src: `${base}.webp`,
+  srcSmall: `${base}-sm.webp`,
+  alt,
+  width,
+  height,
+  smallWidth,
+  position,
+});
 
 const svg = (src: string, alt: string): ImageAsset => ({ src, alt, width: 1600, height: 1000 });
 
@@ -27,9 +45,13 @@ export const brand = {
   og: '/assets/brand/og-image.png',
 } as const;
 
-export const hero: ImageAsset = svg(
-  '/assets/hero/hero-placeholder.svg',
-  'Placeholder visualization of a modern building at dusk with a lit glass volume and cantilevered roof slab',
+export const hero: ImageAsset = webp(
+  '/assets/hero/hero',
+  'Modern two-storey white residence with black-framed glazing, cantilevered roof slabs and glass balustrades',
+  1600,
+  900,
+  800,
+  '50% 40%',
 );
 
 export const portrait: ImageAsset = {
@@ -38,10 +60,19 @@ export const portrait: ImageAsset = {
   alt: 'Portrait of Hussain Ghazanfar in a black suit against a dark blue background',
   width: 1448,
   height: 1086,
+  smallWidth: 720,
 };
 
 /** Placeholder project imagery — keys are referenced from projects.ts. */
 export const img = {
+  // --- Supplied reference images (optimized WebP) -------------------------
+  modernResidence: webp('/assets/architecture/modern-residence', 'Modern white two-storey residence with large glazing, black door, landscaped front garden and paved forecourt', 720, 1280, 640, '50% 55%'),
+  urbanModel: webp('/assets/master-planning/urban-model', 'White architectural urban model with orange highlighted buildings, routes and pedestrian figures', 1200, 800, 800),
+  constructionCollage: webp('/assets/autocad-3d/construction-collage', 'Layered architectural illustration of a high-rise under construction with scaffolding, cranes and technical line drawings', 736, 736, 640),
+  floorPlan3d: webp('/assets/autocad-3d/floor-plan-3d', 'Furnished 3D floor plan from above showing bedrooms, bathrooms, kitchen, drawing room, stair hall and porch with warm lighting', 736, 1308, 640, '50% 30%'),
+  floorPlanDark: webp('/assets/autocad-2d/floor-plan-dark', 'Dark-style architectural floor plan with bedrooms, toilets, kitchen, foyer, dining, living area and sit-out', 923, 1579, 640, '50% 20%'),
+  floorPlanReference: webp('/assets/autocad-2d/floor-plan-reference', 'Black and white ground floor plan with dimensions, two rooms, open kitchen, dining, parlour and title block', 896, 1195, 640, '50% 25%'),
+  // --- Generated placeholder drawings (SVG) -------------------------------
   residenceExterior: svg('/assets/architecture/residence-exterior.svg', 'Placeholder residential exterior with cantilevered upper volume and large glazing'),
   commercialFacade: svg('/assets/architecture/commercial-facade.svg', 'Placeholder commercial tower facade with vertical fins and glass podium'),
   interiorLight: svg('/assets/architecture/interior-light.svg', 'Placeholder light interior living space with window wall and pendant lights'),
