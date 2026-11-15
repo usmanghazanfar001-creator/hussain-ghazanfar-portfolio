@@ -47,11 +47,11 @@ export const brand = {
 
 export const hero: ImageAsset = webp(
   '/assets/hero/hero',
-  'Modern two-storey white residence with black-framed glazing, cantilevered roof slabs and glass balustrades',
+  'Architectural pencil sketch of a modern house with a sloping roof, stone cladding, balconies and a central entrance, drawn as light lines on a dark background',
   1600,
   900,
   800,
-  '50% 40%',
+  '100% 50%',
 );
 
 export const portrait: ImageAsset = {

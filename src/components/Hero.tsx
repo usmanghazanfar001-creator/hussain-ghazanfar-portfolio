@@ -33,8 +33,8 @@ export default function Hero() {
         animate={{ scale: 1 }}
         transition={{ duration: 2.4, ease }}
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/10" aria-hidden="true" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-transparent to-ink/50" aria-hidden="true" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/80 via-ink/25 to-transparent" aria-hidden="true" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/70 via-transparent to-ink/40" aria-hidden="true" />
 
       <div className="container-page flex min-h-[100svh] flex-col justify-end pb-12 pt-36 md:pb-16">
         <motion.p {...rise(0.2)} className="label mb-8 flex items-center gap-4 text-accent">
