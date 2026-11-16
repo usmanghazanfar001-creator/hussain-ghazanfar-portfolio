@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
-import { srcSetOf } from '../data/assets';
 import { categoryLabel, type Project } from '../data/projects';
+import Picture from './Picture';
 
 interface Props {
   project: Project;
@@ -10,27 +10,18 @@ interface Props {
 }
 
 export default function ProjectCard({ project, index, aspect = 'aspect-[4/3]' }: Props) {
-  const { main } = project.images;
   const to = `/projects/${project.slug}`;
   return (
     <article className="group">
       <Link to={to} tabIndex={-1} aria-hidden="true" className={`relative block overflow-hidden bg-line ${aspect}`}>
-        <img
-          src={main.src}
-          srcSet={srcSetOf(main)}
-          sizes="(min-width:1024px) 55vw, 100vw"
-          style={{ objectPosition: main.position }}
+        <Picture
+          image={project.images.main}
           alt=""
-          width={main.width}
-          height={main.height}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+          sizes="(min-width:1024px) 55vw, 100vw"
+          className="h-full w-full transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
         />
         <span className="absolute inset-0 bg-ink/0 transition-colors duration-500 group-hover:bg-ink/25" />
-        {project.placeholder && (
-          <span className="label absolute left-4 top-4 bg-paper/90 px-3 py-1.5 !text-[10px] text-ink">Placeholder</span>
-        )}
+        {project.placeholder && <span className="label absolute left-4 top-4 bg-paper/90 px-3 py-1.5 !text-[10px] text-ink">Sample</span>}
         <span className="absolute bottom-4 right-4 flex h-12 w-12 translate-y-3 items-center justify-center bg-paper text-ink opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
           <ArrowUpRight size={20} aria-hidden="true" />
         </span>
@@ -49,7 +40,7 @@ export default function ProjectCard({ project, index, aspect = 'aspect-[4/3]' }:
           className="label mt-1 flex shrink-0 items-center gap-2 border-b border-ink pb-1 text-ink transition-colors hover:border-accent-deep hover:text-accent-deep"
           aria-label={`View project: ${project.title}`}
         >
-          View Project <ArrowUpRight size={14} aria-hidden="true" />
+          View <ArrowUpRight size={14} aria-hidden="true" />
         </Link>
       </div>
     </article>

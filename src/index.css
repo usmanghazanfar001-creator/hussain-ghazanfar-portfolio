@@ -8,11 +8,6 @@
     scroll-padding-top: 4.5rem;
     -webkit-text-size-adjust: 100%;
   }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
   body {
     @apply bg-paper font-sans text-ink antialiased;
   }
@@ -24,8 +19,8 @@
     outline: 2px solid #7e6540;
     outline-offset: 3px;
   }
-  .on-dark :focus-visible,
-  [data-dark] :focus-visible {
+  [data-dark] :focus-visible,
+  .on-dark :focus-visible {
     outline-color: #b69a70;
   }
   img {
@@ -36,53 +31,6 @@
   h3 {
     text-wrap: balance;
     font-feature-settings: 'liga', 'dlig', 'kern';
-  }
-}
-
-@layer utilities {
-  /* Slow gold shimmer that travels across display type. */
-  .text-shimmer {
-    background-image: linear-gradient(100deg, #b69a70 0%, #b69a70 35%, #f3e3c0 50%, #b69a70 65%, #b69a70 100%);
-    background-size: 250% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: shimmer 6s ease-in-out infinite;
-  }
-  .marquee-track {
-    animation: marquee 38s linear infinite;
-  }
-  .marquee-track:hover {
-    animation-play-state: paused;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .text-shimmer {
-      animation: none;
-      -webkit-text-fill-color: #b69a70;
-      color: #b69a70;
-      background: none;
-    }
-    .marquee-track {
-      animation: none;
-    }
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 130% 0;
-  }
-  100% {
-    background-position: -130% 0;
-  }
-}
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
   }
 }
 
@@ -108,9 +56,126 @@
   .btn-ghost-light {
     @apply border border-paper/60 text-paper hover:bg-paper hover:text-ink;
   }
-  .blueprint-grid {
-    background-image: linear-gradient(to right, rgba(23, 23, 23, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(23, 23, 23, 0.05) 1px, transparent 1px);
-    background-size: 48px 48px;
+  .blueprint-bg {
+    background-image: linear-gradient(to right, rgba(244, 240, 233, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(244, 240, 233, 0.06) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+}
+
+@layer utilities {
+  /* Slow gold shimmer that travels across display type. */
+  .text-shimmer {
+    background-image: linear-gradient(100deg, #b69a70 0%, #b69a70 35%, #f3e3c0 50%, #b69a70 65%, #b69a70 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmer 6s ease-in-out infinite;
+  }
+  .hero-zoom {
+    animation: heroZoom 9s ease-out both;
+  }
+  .marquee-track {
+    animation: marquee 40s linear infinite;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Drawing animations (In Motion section) */
+  .draw-item {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw var(--t, 1.2s) cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0s) forwards;
+  }
+  .fade-item {
+    opacity: 0;
+    animation: fadeIn 0.8s ease var(--d, 0s) forwards;
+  }
+  .rise-item {
+    opacity: 0;
+    transform: translateY(28px);
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) forwards;
+  }
+  .motion-paused *,
+  .motion-paused {
+    animation-play-state: paused !important;
+  }
+  .motion-static .draw-item {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .motion-static .fade-item,
+  .motion-static .rise-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 130% 0;
+  }
+  100% {
+    background-position: -130% 0;
+  }
+}
+@keyframes heroZoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Respect the visitor's reduced-motion setting everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+  .text-shimmer {
+    animation: none;
+    background: none;
+    -webkit-text-fill-color: #b69a70;
+    color: #b69a70;
+  }
+  .marquee-track {
+    animation: none;
   }
 }

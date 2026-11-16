@@ -1,35 +1,34 @@
 /**
  * CENTRAL ASSET CONFIGURATION
  * ---------------------------------------------------------------------------
- * Every image on the site is referenced from here. To swap a placeholder for a
- * real image: drop the file into /public/assets/<folder>/ and change `src`
- * (and `alt`) below. Nothing else needs to change.
+ * Every image on the site is referenced from here. To swap a sample image for a
+ * real one: put the file in /public/assets/, then change `src` (and `alt`) below.
  *
- * Only use images you own or that are licensed / public domain / explicitly
- * permitted for commercial reuse. Never hot-link Pinterest pages.
+ * Raster images use `raster()`: it expects four files next to each other —
+ *   <base>.avif  <base>-sm.avif  <base>.webp  <base>-sm.webp
+ * Only use images you own, created yourself, or are licensed for commercial use.
  */
 
 export interface ImageAsset {
   src: string;
   alt: string;
-  /** Intrinsic size, used to reserve layout space (prevents layout shift). */
+  /** Intrinsic size — reserves layout space and prevents layout shift. */
   width: number;
   height: number;
-  /** Optional smaller version for small screens, and its pixel width (for srcset). */
+  /** Optional small variants for narrow screens (srcset). */
   srcSmall?: string;
   smallWidth?: number;
-  /** CSS object-position used when the image is cropped (e.g. '50% 20%'). */
+  avif?: string;
+  avifSmall?: string;
+  /** CSS object-position used when the image is cropped, e.g. '60% 50%'. */
   position?: string;
 }
 
-/** Builds a responsive srcset string when a small variant exists. */
-export const srcSetOf = (i: ImageAsset) =>
-  i.srcSmall ? `${i.srcSmall} ${i.smallWidth ?? 720}w, ${i.src} ${i.width}w` : undefined;
-
-/** Helper for optimized WebP files that have a `-sm.webp` sibling. */
-const webp = (base: string, alt: string, width: number, height: number, smallWidth: number, position?: string): ImageAsset => ({
+const raster = (base: string, alt: string, width: number, height: number, smallWidth: number, position?: string): ImageAsset => ({
   src: `${base}.webp`,
   srcSmall: `${base}-sm.webp`,
+  avif: `${base}.avif`,
+  avifSmall: `${base}-sm.avif`,
   alt,
   width,
   height,
@@ -37,61 +36,69 @@ const webp = (base: string, alt: string, width: number, height: number, smallWid
   position,
 });
 
-const svg = (src: string, alt: string): ImageAsset => ({ src, alt, width: 1600, height: 1000 });
+/** Generated sample drawings are SVG (resolution independent, a few KB each). */
+const svg = (name: string, alt: string): ImageAsset => ({ src: `/assets/projects/${name}.svg`, alt, width: 1600, height: 1000 });
 
 export const brand = {
-  logoFull: { src: '/assets/brand/logo-full.png', alt: 'Hussain Ghazanfar logo — HG monogram with architecture, CAD design and map planning', width: 600, height: 392 },
-  logoMark: { src: '/assets/brand/logo-mark.png', alt: 'HG monogram', width: 263, height: 295 },
-  og: '/assets/brand/og-image.png',
+  mark: {
+    src: '/assets/brand/hussnain-ghazanfar-logo-mark.png',
+    alt: 'HG monogram of Hussnain Ghazanfar',
+    width: 263,
+    height: 295,
+  },
+  og: '/assets/brand/hussnain-ghazanfar-og-image.png',
 } as const;
 
-export const hero: ImageAsset = webp(
-  '/assets/hero/hero',
-  'Architectural pencil sketch of a modern house with a sloping roof, stone cladding, balconies and a central entrance, drawn as light lines on a dark background',
-  1600,
-  900,
-  800,
-  '100% 50%',
+export const portrait: ImageAsset = raster(
+  '/assets/about/hussnain-ghazanfar-portrait',
+  'Portrait of Hussnain Ghazanfar in a black suit against a dark blue background',
+  1448,
+  1086,
+  720,
+  '50% 20%',
 );
 
-export const portrait: ImageAsset = {
-  src: '/assets/about/portrait.webp',
-  srcSmall: '/assets/about/portrait-720.webp',
-  alt: 'Portrait of Hussain Ghazanfar in a black suit against a dark blue background',
-  width: 1448,
-  height: 1086,
-  smallWidth: 720,
-};
+const sketch = raster(
+  '/assets/hero/architectural-chalk-sketch-modern-house',
+  'Chalk-style architectural sketch of a modern house with a butterfly roof, stone walls and cantilevered balconies on a black background',
+  1170,
+  658,
+  800,
+  '65% 50%',
+);
 
-/** Placeholder project imagery — keys are referenced from projects.ts. */
+const render = raster(
+  '/assets/hero/modern-house-sunset-visualization',
+  'Architectural visualization of a modern white house at sunset with glass balconies, warm interior lighting and a landscaped garden',
+  1170,
+  658,
+  800,
+  '70% 50%',
+);
+
+/** Hero slides in display order. The first one is the LCP image (never lazy-loaded). */
+export const heroSlides = [
+  { id: 'sketch', label: 'Concept sketch', image: sketch },
+  { id: 'render', label: 'Visualization', image: render },
+] as const;
+
 export const img = {
-  // --- Supplied reference images (optimized WebP) -------------------------
-  modernResidence: webp('/assets/architecture/modern-residence', 'Modern white two-storey residence with large glazing, black door, landscaped front garden and paved forecourt', 720, 1280, 640, '50% 55%'),
-  urbanModel: webp('/assets/master-planning/urban-model', 'White architectural urban model with orange highlighted buildings, routes and pedestrian figures', 1200, 800, 800),
-  constructionCollage: webp('/assets/autocad-3d/construction-collage', 'Layered architectural illustration of a high-rise under construction with scaffolding, cranes and technical line drawings', 736, 736, 640),
-  floorPlan3d: webp('/assets/autocad-3d/floor-plan-3d', 'Furnished 3D floor plan from above showing bedrooms, bathrooms, kitchen, drawing room, stair hall and porch with warm lighting', 736, 1308, 640, '50% 30%'),
-  floorPlanDark: webp('/assets/autocad-2d/floor-plan-dark', 'Dark-style architectural floor plan with bedrooms, toilets, kitchen, foyer, dining, living area and sit-out', 923, 1579, 640, '50% 20%'),
-  floorPlanReference: webp('/assets/autocad-2d/floor-plan-reference', 'Black and white ground floor plan with dimensions, two rooms, open kitchen, dining, parlour and title block', 896, 1195, 640, '50% 25%'),
-  // --- Generated placeholder drawings (SVG) -------------------------------
-  residenceExterior: svg('/assets/architecture/residence-exterior.svg', 'Placeholder residential exterior with cantilevered upper volume and large glazing'),
-  commercialFacade: svg('/assets/architecture/commercial-facade.svg', 'Placeholder commercial tower facade with vertical fins and glass podium'),
-  interiorLight: svg('/assets/architecture/interior-light.svg', 'Placeholder light interior living space with window wall and pendant lights'),
-
-  planGround: svg('/assets/autocad-2d/plan-ground.svg', 'Placeholder black and white ground floor plan with dimensions and title block'),
-  planFirst: svg('/assets/autocad-2d/plan-first.svg', 'Placeholder black and white first floor plan with stair and room labels'),
-  elevation: svg('/assets/autocad-2d/elevation.svg', 'Placeholder front elevation line drawing with level markers'),
-  section: svg('/assets/autocad-2d/section.svg', 'Placeholder building section with solid wall and slab poché and stair'),
-
-  massing: svg('/assets/autocad-3d/massing-iso.svg', 'Placeholder isometric massing model of stepped building volumes on a dark background'),
-  wireframe: svg('/assets/autocad-3d/wireframe.svg', 'Placeholder isometric wireframe model of building volumes'),
-  isoLight: svg('/assets/autocad-3d/exterior-render.svg', 'Placeholder light isometric building model with a warm accent volume'),
-  interiorDark: svg('/assets/autocad-3d/interior-dark.svg', 'Placeholder moody interior visualization with warm window glow'),
-
-  sitePlan: svg('/assets/map-planning/site-plan.svg', 'Placeholder housing scheme site plan with numbered plots, park and boulevard'),
-  roadNetwork: svg('/assets/map-planning/road-network.svg', 'Placeholder road network layout showing arterial, collector and local roads'),
-
-  masterplan: svg('/assets/master-planning/masterplan.svg', 'Placeholder master plan of a mixed-use district with ring road, green blocks and civic core'),
-  landscape: svg('/assets/master-planning/landscape.svg', 'Placeholder landscape plan with pond, plaza, pergola, paths and tree canopies'),
+  sketch,
+  render,
+  commercialFacade: svg('commercial-facade-concept', 'Sample commercial tower facade with vertical fins above a glass podium'),
+  interiorEvening: svg('interior-visualization-evening', 'Sample evening interior visualization with a window wall, pendant lights and a warm glow'),
+  planGround: svg('floor-plan-ground-line-drawing', 'Sample black and white ground floor plan with dimensions, door swings and a title block'),
+  planFirst: svg('floor-plan-first-line-drawing', 'Sample black and white first floor plan with a stair and labelled rooms'),
+  planPresentation: svg('floor-plan-presentation-dark', 'Sample ground floor plan in a dark presentation style with gold furniture outlines'),
+  planFurnished: svg('floor-plan-furnished-sample', 'Sample furnished first floor plan seen from above on a warm timber floor'),
+  elevation: svg('elevation-front-line-drawing', 'Sample front elevation line drawing with level markers and dimensions'),
+  section: svg('section-aa-line-drawing', 'Sample building section with solid wall and slab poche and a stair'),
+  massing: svg('massing-model-isometric', 'Sample isometric massing model of stepped building volumes on a dark background'),
+  wireframe: svg('wireframe-model-isometric', 'Sample isometric wireframe model of building volumes'),
+  constructionAxon: svg('construction-stage-axonometric', 'Sample axonometric drawing of a concrete frame under construction with a tower crane'),
+  urbanModel: svg('urban-massing-model-isometric', 'Sample isometric urban massing model with three highlighted gold towers'),
+  sitePlan: svg('housing-scheme-site-plan', 'Sample housing scheme site plan with numbered plots, a central park and a boulevard'),
+  roadNetwork: svg('road-network-hierarchy', 'Sample road network showing arterial, collector and local roads with junctions'),
+  masterplan: svg('master-plan-mixed-use', 'Sample master plan of a mixed-use district with a ring road, green blocks, a lake and a civic core'),
+  landscape: svg('landscape-open-space-plan', 'Sample landscape plan with a pond, plaza, pergola, paths and tree canopies'),
 } as const;
-
-export type ImageKey = keyof typeof img;

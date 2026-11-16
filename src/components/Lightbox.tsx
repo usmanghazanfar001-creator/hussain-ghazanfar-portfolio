@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react';
+import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from 'lucide-react';
 import type { ImageAsset } from '../data/assets';
+import Picture from './Picture';
 
 export interface LightboxItem {
   image: ImageAsset;
@@ -10,38 +10,45 @@ export interface LightboxItem {
 
 interface Props {
   items: LightboxItem[];
-  index: number | null;
+  index: number;
   onClose: () => void;
-  onChange: (index: number) => void;
+  onIndex: (i: number) => void;
 }
 
-/** Full-screen image viewer: Esc to close, ← → to navigate, focus is trapped and restored. */
-export default function Lightbox({ items, index, onClose, onChange }: Props) {
-  const open = index !== null && items[index] !== undefined;
-  const root = useRef<HTMLDivElement>(null);
-  const closeBtn = useRef<HTMLButtonElement>(null);
-  const opener = useRef<Element | null>(null);
+/** Accessible modal image viewer: focus trap, Esc/arrow keys, click-to-zoom following the pointer. */
+export default function Lightbox({ items, index, onClose, onIndex }: Props) {
+  const [zoom, setZoom] = useState(false);
+  const [origin, setOrigin] = useState('50% 50%');
+  const dialog = useRef<HTMLDivElement>(null);
+  const item = items[index];
+  const many = items.length > 1;
+
+  const go = useCallback(
+    (delta: number) => {
+      setZoom(false);
+      onIndex((index + delta + items.length) % items.length);
+    },
+    [index, items.length, onIndex],
+  );
 
   useEffect(() => {
-    if (!open) return;
-    opener.current = document.activeElement;
+    const previous = document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    closeBtn.current?.focus();
+    dialog.current?.querySelector<HTMLElement>('button')?.focus();
     return () => {
       document.body.style.overflow = prevOverflow;
-      (opener.current as HTMLElement | null)?.focus?.();
+      previous?.focus?.();
     };
-  }, [open]);
+  }, []);
 
   useEffect(() => {
-    if (!open || index === null) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
-      else if (e.key === 'ArrowRight') onChange((index + 1) % items.length);
-      else if (e.key === 'ArrowLeft') onChange((index - 1 + items.length) % items.length);
-      else if (e.key === 'Tab' && root.current) {
-        const f = root.current.querySelectorAll<HTMLElement>('button:not([disabled])');
+      else if (e.key === 'ArrowRight' && many) go(1);
+      else if (e.key === 'ArrowLeft' && many) go(-1);
+      else if (e.key === 'Tab' && dialog.current) {
+        const f = dialog.current.querySelectorAll<HTMLElement>('button');
         if (!f.length) return;
         const first = f[0];
         const last = f[f.length - 1];
@@ -56,79 +63,61 @@ export default function Lightbox({ items, index, onClose, onChange }: Props) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, index, items.length, onClose, onChange]);
+  }, [go, many, onClose]);
 
-  const item = index !== null ? items[index] : undefined;
-  const multi = items.length > 1;
+  const track = (e: MouseEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setOrigin(`${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`);
+  };
+
+  if (!item) return null;
+  const btn = 'flex h-11 w-11 items-center justify-center border border-paper/40 text-paper transition-colors hover:border-accent hover:text-accent';
 
   return (
-    <AnimatePresence>
-      {open && item && index !== null && (
-        <motion.div
-          ref={root}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Image viewer: ${item.caption}`}
-          className="fixed inset-0 z-[100] flex flex-col bg-ink/95 text-paper"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          onClick={onClose}
+    <div ref={dialog} role="dialog" aria-modal="true" aria-label={`Image viewer: ${item.caption}`} className="fixed inset-0 z-[100] flex flex-col bg-ink/95">
+      <div className="flex items-center justify-between p-4 md:p-6">
+        <p className="label text-paper/80">
+          {index + 1} / {items.length}
+        </p>
+        <div className="flex gap-3">
+          <button type="button" className={btn} onClick={() => setZoom((z) => !z)} aria-label={zoom ? 'Zoom out' : 'Zoom in'} aria-pressed={zoom}>
+            {zoom ? <ZoomOut size={18} aria-hidden="true" /> : <ZoomIn size={18} aria-hidden="true" />}
+          </button>
+          <button type="button" className={btn} onClick={onClose} aria-label="Close image viewer">
+            <X size={18} aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 md:px-20">
+        {many && (
+          <button type="button" className={`${btn} absolute left-3 z-10 md:left-6`} onClick={() => go(-1)} aria-label="Previous image">
+            <ChevronLeft size={20} aria-hidden="true" />
+          </button>
+        )}
+        <div
+          className={`h-full max-h-full w-full overflow-hidden ${zoom ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
+          onMouseMove={zoom ? track : undefined}
+          onClick={(e) => {
+            track(e);
+            setZoom((z) => !z);
+          }}
         >
-          <div className="flex items-center justify-between px-6 py-4" onClick={(e) => e.stopPropagation()}>
-            <p className="label text-paper/70">
-              {index + 1} / {items.length}
-            </p>
-            <button ref={closeBtn} type="button" onClick={onClose} aria-label="Close image viewer" className="flex h-11 w-11 items-center justify-center hover:text-accent">
-              <X size={26} />
-            </button>
+          <div
+            className="h-full w-full transition-transform duration-300"
+            style={{ transform: zoom ? 'scale(2.2)' : 'scale(1)', transformOrigin: origin }}
+          >
+            <Picture image={item.image} fit="contain" sizes="100vw" eager alt={item.image.alt} />
           </div>
+        </div>
+        {many && (
+          <button type="button" className={`${btn} absolute right-3 z-10 md:right-6`} onClick={() => go(1)} aria-label="Next image">
+            <ChevronRight size={20} aria-hidden="true" />
+          </button>
+        )}
+      </div>
 
-          <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 md:px-20">
-            {multi && (
-              <button
-                type="button"
-                aria-label="Previous image"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onChange((index - 1 + items.length) % items.length);
-                }}
-                className="absolute left-2 z-10 flex h-12 w-12 items-center justify-center bg-ink/60 hover:text-accent md:left-6"
-              >
-                <ChevronLeft size={28} />
-              </button>
-            )}
-            <motion.img
-              key={item.image.src}
-              src={item.image.src}
-              alt={item.image.alt}
-              className="max-h-full max-w-full bg-paper object-contain"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.35 }}
-              onClick={(e) => e.stopPropagation()}
-            />
-            {multi && (
-              <button
-                type="button"
-                aria-label="Next image"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onChange((index + 1) % items.length);
-                }}
-                className="absolute right-2 z-10 flex h-12 w-12 items-center justify-center bg-ink/60 hover:text-accent md:right-6"
-              >
-                <ChevronRight size={28} />
-              </button>
-            )}
-          </div>
-
-          <p className="px-6 py-5 text-center text-sm text-paper/80" onClick={(e) => e.stopPropagation()}>
-            {item.caption}
-          </p>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      <p className="p-4 text-center text-sm text-paper/80 md:p-6">{item.caption}</p>
+    </div>
   );
 }

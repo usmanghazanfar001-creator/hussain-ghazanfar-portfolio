@@ -2,12 +2,12 @@ const words = [
   'Architectural Design',
   'AutoCAD 2D Drafting',
   'AutoCAD 3D Modeling',
-  'Map Planning',
+  'Architectural Visualization',
   'Site Planning',
   'Master Planning',
 ];
 
-/** Slow-moving editorial ticker of services. Decorative; hidden from screen readers. */
+/** Slow-moving editorial ticker of disciplines. Decorative, so hidden from screen readers. */
 export default function Marquee() {
   const row = (
     <ul className="flex shrink-0 items-center" aria-hidden="true">

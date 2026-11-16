@@ -4,21 +4,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#171717',
+        ink: '#171717', // Charcoal
         graphite: '#303030',
-        paper: '#F5F3EF',
+        paper: '#F4F0E9', // Warm Ivory
         surface: '#FFFFFF',
-        accent: '#B69A70',
-        // Darker accent for small text on light backgrounds (meets WCAG AA).
+        accent: '#B69A70', // Champagne Gold
+        // Darker gold for small text on ivory (WCAG AA).
         'accent-deep': '#7E6540',
-        muted: '#858585',
-        // Darker muted tone for readable small body copy on light backgrounds.
-        'muted-strong': '#666666',
-        line: '#E5E1DA',
+        muted: '#77736D', // Architectural Grey — large text and decoration only on ivory
+        'muted-strong': '#5E5A55', // Architectural Grey, darkened for small text (WCAG AA)
+        line: '#E3DDD2',
       },
       fontFamily: {
-        display: ['"Cormorant Garamond"', 'Playfair Display', 'Georgia', 'serif'],
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        sans: ['Manrope', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       letterSpacing: { technical: '0.18em' },

@@ -1,12 +1,15 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import BackToTop from './components/BackToTop';
 import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 import ScrollManager from './components/ScrollManager';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 
+// Route-level code splitting: project and service pages load on demand.
 const ProjectPage = lazy(() => import('./pages/ProjectPage'));
+const ServicePage = lazy(() => import('./pages/ServicePage'));
 
 export default function App() {
   return (
@@ -24,11 +27,13 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/projects/:slug" element={<ProjectPage />} />
+            <Route path="/services/:slug" element={<ServicePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
       <Footer />
+      <BackToTop />
     </>
   );
 }

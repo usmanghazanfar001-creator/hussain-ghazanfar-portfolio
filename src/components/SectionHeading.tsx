@@ -22,9 +22,7 @@ export default function SectionHeading({ index, label, title, dark = false, clas
       </p>
       <h2
         aria-label={title}
-        className={`mt-6 max-w-4xl font-display text-[clamp(2.4rem,5.4vw,4.6rem)] font-medium leading-[1.02] ${
-          dark ? 'text-paper' : 'text-ink'
-        }`}
+        className={`mt-6 max-w-4xl font-display text-[clamp(2.4rem,5.4vw,4.6rem)] font-medium leading-[1.02] ${dark ? 'text-paper' : 'text-ink'}`}
       >
         <SplitWords text={title} />
       </h2>

@@ -3,84 +3,120 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#F5F3EF" />
+    <meta name="theme-color" content="#F4F0E9" />
     <meta name="google-site-verification" content="BqNkTFVphyxR33cNquo0O0bsuckTijAfewo8eEby4zY" />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="author" content="Hussain Ghazanfar" />
-    <meta name="keywords" content="architectural designer, AutoCAD 2D drafting, AutoCAD 3D modeling, site planning, map planning, master planning, floor plans" />
-    <meta name="google-site-verification" content="DShBouOBwhrQpcdkmTSoJLSrU-BLQe2RgwFVJf5K6_g" />
-    <title>Hussain Ghazanfar | Architecture &amp; AutoCAD Designer</title>
+    <!--ENV_META-->
+
+    <title>Hussnain Ghazanfar | Architecture, AutoCAD &amp; Master Planning</title>
     <meta
       name="description"
-      content="Explore the architectural portfolio of Hussain Ghazanfar, specializing in architectural design, AutoCAD 2D and 3D drafting, site planning, and master planning."
+      content="Explore Hussnain Ghazanfar's architectural portfolio featuring architectural design, AutoCAD 2D drafting, 3D modeling, architectural visualization, and master planning."
     />
-    <link rel="canonical" href="%VITE_SITE_URL%/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="Hussnain Ghazanfar" />
+    <link rel="canonical" href="%SITE_URL%/" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Hussain Ghazanfar" />
-    <meta property="og:title" content="Hussain Ghazanfar | Architecture &amp; AutoCAD Designer" />
+    <meta property="og:site_name" content="Hussnain Ghazanfar" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Hussnain Ghazanfar | Architecture, AutoCAD &amp; Master Planning" />
     <meta
       property="og:description"
-      content="Architectural design, AutoCAD 2D and 3D drafting, site planning, and master planning."
+      content="Explore Hussnain Ghazanfar's architectural portfolio featuring architectural design, AutoCAD 2D drafting, 3D modeling, architectural visualization, and master planning."
     />
-    <meta property="og:url" content="%VITE_SITE_URL%/" />
-    <meta property="og:image" content="%VITE_SITE_URL%/assets/brand/og-image.png" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:image" content="%SITE_URL%/assets/brand/hussnain-ghazanfar-og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Hussain Ghazanfar logo: HG monogram with architecture, CAD design and map planning" />
+    <meta property="og:image:alt" content="Hussnain Ghazanfar — Shaping Spaces. Defining Visions." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Hussain Ghazanfar | Architecture &amp; AutoCAD Designer" />
-    <meta name="twitter:image" content="%VITE_SITE_URL%/assets/brand/og-image.png" />
+    <meta name="twitter:title" content="Hussnain Ghazanfar | Architecture, AutoCAD &amp; Master Planning" />
+    <meta
+      name="twitter:description"
+      content="Explore Hussnain Ghazanfar's architectural portfolio featuring architectural design, AutoCAD 2D drafting, 3D modeling, architectural visualization, and master planning."
+    />
+    <meta name="twitter:image" content="%SITE_URL%/assets/brand/hussnain-ghazanfar-og-image.png" />
 
-    <!-- Icons -->
+    <!-- Icons (circular favicon) -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="48x48" href="/assets/icons/favicon-48.png" />
-    <link rel="icon" type="image/png" sizes="256x256" href="/assets/icons/favicon-256.png" />
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Hero image: fetched early for a faster Largest Contentful Paint -->
-    <link rel="preload" as="image" href="/assets/hero/hero-sm.webp" imagesrcset="/assets/hero/hero-sm.webp 800w, /assets/hero/hero.webp 1600w" imagesizes="100vw" fetchpriority="high" />
+    <!-- LCP image: the first hero slide is fetched early and never lazy-loaded -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      href="/assets/hero/architectural-chalk-sketch-modern-house-sm.avif"
+      imagesrcset="/assets/hero/architectural-chalk-sketch-modern-house-sm.avif 800w, /assets/hero/architectural-chalk-sketch-modern-house.avif 1170w"
+      imagesizes="100vw"
+      fetchpriority="high"
+    />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@300..700&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Structured data: Person. Only verified facts; add sameAs/url when confirmed. -->
-    <script type="application/ld+json">
+    <!-- Shown by crawlers and before JavaScript loads; replaced when the app mounts -->
+    <style>
+      body{margin:0;background:#F4F0E9;color:#171717}
+      .prerender{max-width:760px;margin:0 auto;padding:112px 24px 64px;font-family:Georgia,serif;line-height:1.6}
+      .prerender h1{font-size:2.4rem;line-height:1.1;font-weight:500}
+      .prerender a{color:#7E6540}
+    </style>
+
+    <!-- Structured data (verified facts only). Page-specific data lives in #ld-page. -->
+    <script type="application/ld+json" id="ld-base">
       {
         "@context": "https://schema.org",
         "@graph": [
-      {
-        "@type": "WebSite",
-        "name": "Hussain Ghazanfar | Architecture & AutoCAD Designer",
-        "url": "%VITE_SITE_URL%/",
-        "inLanguage": "en"
-      },
-      {
-        "@type": "Person",
-        "name": "Hussain Ghazanfar",
-        "jobTitle": "Architectural Designer and AutoCAD Designer",
-        "description": "Architectural design, AutoCAD 2D and 3D drafting, map planning, site planning and master planning.",
-        "url": "%VITE_SITE_URL%/",
-        "image": "%VITE_SITE_URL%/assets/about/portrait.webp",
-        "knowsAbout": [
-          "Architectural design",
-          "AutoCAD 2D drafting",
-          "AutoCAD 3D modeling",
-          "Site planning",
-          "Map planning",
-          "Master planning"
+          {
+            "@type": "WebSite",
+            "@id": "%SITE_URL%/#website",
+            "url": "%SITE_URL%/",
+            "name": "Hussnain Ghazanfar",
+            "description": "Architectural design, AutoCAD 2D and 3D drafting, visualization, site planning and master planning.",
+            "inLanguage": "en",
+            "publisher": { "@id": "%SITE_URL%/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "%SITE_URL%/#person",
+            "name": "Hussnain Ghazanfar",
+            "jobTitle": "Architectural Designer",
+            "description": "Architectural designer working across architectural design, AutoCAD 2D drafting, AutoCAD 3D modeling, architectural visualization, map and site planning, and master planning.",
+            "url": "%SITE_URL%/",
+            "image": "%SITE_URL%/assets/about/hussnain-ghazanfar-portrait.webp",
+            "knowsAbout": [
+              "Architectural design",
+              "AutoCAD 2D drafting",
+              "AutoCAD 3D modeling",
+              "Architectural visualization",
+              "Site planning",
+              "Map planning",
+              "Master planning"
+            ]
+          }
         ]
       }
-        ]
+    </script>
+    <script type="application/ld+json" id="ld-page">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "%SITE_URL%/#webpage",
+        "url": "%SITE_URL%/",
+        "name": "Hussnain Ghazanfar | Architecture, AutoCAD & Master Planning",
+        "isPartOf": { "@id": "%SITE_URL%/#website" },
+        "about": { "@id": "%SITE_URL%/#person" },
+        "inLanguage": "en"
       }
     </script>
   </head>
@@ -88,8 +124,8 @@
     <div id="root"></div>
     <noscript>
       <p style="padding:2rem;font-family:sans-serif">
-        Hussain Ghazanfar — Architectural Designer, AutoCAD 2D &amp; 3D Designer, Map Planner. Please enable JavaScript
-        to view the portfolio.
+        Hussnain Ghazanfar — Architectural Designer, AutoCAD 2D &amp; 3D Designer, Map and Site Planner. Please enable
+        JavaScript to view the full portfolio.
       </p>
     </noscript>
     <script type="module" src="/src/main.tsx"></script>

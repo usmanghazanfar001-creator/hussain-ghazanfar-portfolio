@@ -1,4 +1,3 @@
+# Placeholder: `npm run build` regenerates this file in dist/ with the real sitemap URL.
 User-agent: *
 Allow: /
-
-Sitemap: https://hussnainghazanfar.vercel.app/

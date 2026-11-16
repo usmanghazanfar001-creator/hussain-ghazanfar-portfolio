@@ -1,10 +1,10 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { m, useReducedMotion } from 'framer-motion';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
  * Per-character rise-in for large display headings (plays on load).
- * Callers should put an aria-label on the heading and aria-hidden on this wrapper.
+ * Give the heading an aria-label and mark the wrapper aria-hidden.
  */
 export function SplitChars({ text, delay = 0, charClassName = '' }: { text: string; delay?: number; charClassName?: string }) {
   const reduce = useReducedMotion();
@@ -17,15 +17,15 @@ export function SplitChars({ text, delay = 0, charClassName = '' }: { text: stri
           {[...w].map((c) => {
             const i = n++;
             return (
-              <span key={i} className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]">
-                <motion.span
+              <span key={i} className="-mb-[0.12em] inline-block overflow-hidden pb-[0.12em] align-bottom">
+                <m.span
                   className={`inline-block ${charClassName}`}
                   initial={reduce ? false : { y: '115%', rotate: 4 }}
                   animate={{ y: 0, rotate: 0 }}
                   transition={{ duration: 0.9, delay: delay + i * 0.03, ease }}
                 >
                   {c}
-                </motion.span>
+                </m.span>
               </span>
             );
           })}
@@ -42,8 +42,8 @@ export function SplitWords({ text, delay = 0 }: { text: string; delay?: number }
   return (
     <span aria-hidden="true">
       {text.split(' ').map((w, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em]">
-          <motion.span
+        <span key={i} className="-mb-[0.1em] inline-block overflow-hidden pb-[0.1em] align-bottom">
+          <m.span
             className="inline-block"
             initial={reduce ? false : { y: '110%' }}
             whileInView={{ y: 0 }}
@@ -51,7 +51,7 @@ export function SplitWords({ text, delay = 0 }: { text: string; delay?: number }
             transition={{ duration: 0.85, delay: delay + i * 0.06, ease }}
           >
             {w}&nbsp;
-          </motion.span>
+          </m.span>
         </span>
       ))}
     </span>

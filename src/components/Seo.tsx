@@ -1,14 +1,5 @@
 import { useEffect } from 'react';
-import { brand } from '../data/assets';
-import { site } from '../data/site';
-
-interface SeoProps {
-  title?: string;
-  description?: string;
-  path?: string;
-  image?: string;
-  jsonLd?: Record<string, unknown>;
-}
+import { abs, type RouteMeta } from '../lib/routes';
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);
@@ -30,41 +21,32 @@ function setCanonical(href: string) {
   el.href = href;
 }
 
-/** Per-route <head> management for the SPA (title, description, canonical, Open Graph, JSON-LD). */
-export default function Seo({ title, description = site.seo.description, path = '/', image = brand.og, jsonLd }: SeoProps) {
+/** Per-route <head> management for client-side navigation. The same values are prerendered at build time. */
+export default function Seo({ meta }: { meta: RouteMeta }) {
   useEffect(() => {
-    const base = site.url.replace(/\/$/, '');
-    const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.seo.titleSuffix}`;
-    const url = `${base}${path === '/' ? '/' : path}`;
-    // Social crawlers need a raster image: fall back to the brand card for SVG placeholders.
-    const raster = image.endsWith('.svg') ? brand.og : image;
-    const abs = raster.startsWith('http') ? raster : `${base}${raster}`;
-
-    document.title = fullTitle;
-    setMeta('name', 'description', description);
-    setMeta('property', 'og:title', fullTitle);
-    setMeta('property', 'og:description', description);
+    const url = abs(meta.path);
+    const image = meta.image.startsWith('http') ? meta.image : abs(meta.image);
+    document.title = meta.title;
+    setMeta('name', 'description', meta.description);
+    setMeta('name', 'robots', meta.noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large');
+    setMeta('property', 'og:title', meta.title);
+    setMeta('property', 'og:description', meta.description);
     setMeta('property', 'og:url', url);
-    setMeta('property', 'og:image', abs);
-    setMeta('name', 'twitter:card', 'summary_large_image');
-    setMeta('name', 'twitter:title', fullTitle);
-    setMeta('name', 'twitter:description', description);
-    setMeta('name', 'twitter:image', abs);
-    setMeta('name', 'robots', path === '/404' ? 'noindex, follow' : 'index, follow, max-image-preview:large');
+    setMeta('property', 'og:image', image);
+    setMeta('name', 'twitter:title', meta.title);
+    setMeta('name', 'twitter:description', meta.description);
+    setMeta('name', 'twitter:image', image);
     setCanonical(url);
 
-    let script: HTMLScriptElement | null = null;
-    if (jsonLd) {
+    let script = document.getElementById('ld-page') as HTMLScriptElement | null;
+    if (!script) {
       script = document.createElement('script');
       script.type = 'application/ld+json';
-      script.dataset.pageJsonld = 'true';
-      script.text = JSON.stringify(jsonLd);
+      script.id = 'ld-page';
       document.head.appendChild(script);
     }
-    return () => {
-      script?.remove();
-    };
-  }, [title, description, path, image, jsonLd]);
+    script.textContent = JSON.stringify(meta.jsonLd);
+  }, [meta.path, meta.title, meta.description, meta.image, meta.noindex, meta.jsonLd]);
 
   return null;
 }

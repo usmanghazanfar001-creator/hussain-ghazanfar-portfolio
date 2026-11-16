@@ -1,116 +1,81 @@
 /**
  * SITE CONTENT — edit this file to update names, contact details and copy.
  *
- * RULES (from the brief): do not invent qualifications, years of experience,
- * awards, registrations, testimonials or client projects. Leave fields empty
- * until the client supplies verified information — the UI shows a clear
- * "placeholder" state for any empty field.
+ * RULES (from the brief): do not invent qualifications, years of experience, awards,
+ * registrations, testimonials or client projects. Empty contact fields are simply hidden
+ * on the live site (they show a "Placeholder" tag only while running `npm run dev`).
  */
 
 export const site = {
-  /** Spelling follows the supplied logo. Change here and everything updates. */
-  name: 'Hussain Ghazanfar',
+  name: 'Hussnain Ghazanfar',
   initials: 'HG',
   role: 'Architectural Designer',
-  specialties: ['AutoCAD 2D & 3D Designer', 'Map Planner', 'Site Planning Specialist'],
-  /** Production URL. Also set VITE_SITE_URL in .env (used for sitemap, canonical, Open Graph). */
-  url: (import.meta.env.VITE_SITE_URL as string | undefined) ?? 'https://hussnainghazanfar.vercel.app/',
+  tagline: 'Shaping Spaces. Defining Visions.',
+  specialties: ['AutoCAD 2D & 3D Designer', 'Architectural Visualization', 'Map & Site Planner'],
+  /** Production URL. Set VITE_SITE_URL in .env / Vercel — used for canonical URLs, sitemap and structured data. */
+  url: ((import.meta.env.VITE_SITE_URL as string | undefined) || 'https://www.example.com').replace(/\/$/, ''),
   seo: {
-    titleSuffix: 'Architecture & AutoCAD Designer',
+    title: 'Hussnain Ghazanfar | Architecture, AutoCAD & Master Planning',
     description:
-      'Explore the architectural portfolio of Hussain Ghazanfar, specializing in architectural design, AutoCAD 2D and 3D drafting, site planning, and master planning.',
+      "Explore Hussnain Ghazanfar's architectural portfolio featuring architectural design, AutoCAD 2D drafting, 3D modeling, architectural visualization, and master planning.",
   },
 } as const;
 
 export const heroCopy = {
-  eyebrow: 'Architectural Design · AutoCAD · Master Planning',
-  headline: ['Designing Spaces.', 'Planning Communities.'],
-  text: 'Architectural design, technical drafting, 3D visualization, and master planning — transforming concepts into thoughtful, functional spaces.',
+  eyebrow: 'Architecture · AutoCAD · Master Planning',
+  headline: ['Architecture Beyond', 'Dimensions.'],
+  text: 'Exploring the intersection of architectural design, technical precision, 3D visualization, and spatial planning.',
 };
 
 export const aboutCopy = {
-  heading: 'Architecture Through Precision and Creativity.',
+  heading: 'Architecture through precision and creativity.',
   intro: [
-    `${site.name} is an architectural and CAD design professional working across architectural design, AutoCAD 2D drafting, AutoCAD 3D modeling, map planning and master planning.`,
+    `${site.name} is an architectural designer working across architectural design, AutoCAD 2D drafting, AutoCAD 3D modeling, architectural visualization, map and site planning, and master planning.`,
     'The work moves from first concept to coordinated technical drawings and clear visual presentation — so an idea can be understood, reviewed and built.',
   ],
-  /** EDITABLE: rewrite in the client's own words. */
+  /** EDITABLE: rewrite in your own words. */
   philosophy:
     'Good design starts with how a space is used. Each project is approached through careful planning, accurate documentation and a clear, restrained visual language.',
   capabilities: [
-    'Architectural design & building layouts',
-    'AutoCAD 2D technical & construction drawings',
-    'AutoCAD 3D modeling & visualization',
+    'Architectural design and building layouts',
+    'AutoCAD 2D technical and construction drawings',
+    'AutoCAD 3D modeling and architectural visualization',
     'Site, land-use and road-network planning',
-    'Residential & commercial master planning',
+    'Residential and commercial master planning',
   ],
-  /**
-   * EDITABLE PLACEHOLDERS — leave empty until verified.
-   * Example: experience: [{ title: 'Role', org: 'Studio', period: '20XX – 20XX' }]
-   */
+  /** Leave empty until verified. Example: { title: 'Role', org: 'Studio', period: '2020 – 2023' } */
   experience: [] as { title: string; org: string; period: string }[],
   qualifications: [] as { title: string; org: string; year: string }[],
 };
 
 export const contact = {
-  heading: 'Have a Project in Mind?',
-  text: "Let's discuss your architectural design, drafting, or planning requirements.",
-  /**
-   * EDITABLE PLACEHOLDERS — leave '' until verified.
-   * whatsapp: digits only with country code, e.g. '923001234567'
-   * linkedin: full profile URL.
-   */
-  email: '',
-  phone: '',
-  whatsapp: '',
+  heading: "Have a Vision? Let's Give It Form.",
+  text: 'Tell me about your project — architectural design, drafting, 3D visualization or planning — and I will reply with the next steps.',
+  cta: 'Start a Conversation',
+  /** Fill these in to switch the matching rows and buttons on. Empty = hidden on the live site. */
+  email: 'ranahussnainghazanfar9@gmail.com',
+  /** Written in international format so it dials correctly from any country. */
+  phone: '+92 305 6669735',
+  /** Digits only, with country code. Same number as the phone — clear this if it is not on WhatsApp. */
+  whatsapp: '923056669735',
   linkedin: '',
   location: '',
-  /** Optional: a Formspree/Basin/Getform endpoint. If empty, the form opens the visitor's email app. */
+  /** Extra profiles, e.g. { label: 'Instagram', url: 'https://…' }. */
+  socials: [] as { label: string; url: string }[],
+  /** Add a real file, e.g. '/files/Hussnain-Ghazanfar-CV.pdf' (put it in /public/files). Empty = no CV button. */
+  cvUrl: '',
+  /** Optional Formspree / Basin / Getform endpoint. Empty = the form opens the visitor's email app (needs `email`). */
   formEndpoint: '',
+  privacyNote: 'Your name, email and message are used only to reply to your enquiry and are not shared with third parties.',
 };
 
 export const navLinks = [
-  { label: 'About', hash: 'about' },
-  { label: 'Services', hash: 'services' },
   { label: 'Projects', hash: 'projects' },
-  { label: 'Showreel', hash: 'showreel' },
+  { label: 'Services', hash: 'services' },
+  { label: 'About', hash: 'about' },
   { label: 'Process', hash: 'process' },
-  { label: 'Skills', hash: 'skills' },
   { label: 'Contact', hash: 'contact' },
 ];
-
-export const services = [
-  {
-    id: 'architectural-design',
-    icon: 'building',
-    title: 'Architectural Design',
-    points: ['Residential architecture', 'Commercial architecture', 'Building layouts', 'Elevations and sections'],
-  },
-  {
-    id: 'autocad-2d',
-    icon: 'ruler',
-    title: 'AutoCAD 2D Drafting',
-    points: ['Floor plans', 'Technical drawings', 'Construction drawings', 'Sections and elevations'],
-  },
-  {
-    id: 'autocad-3d',
-    icon: 'box',
-    title: 'AutoCAD 3D Modeling',
-    points: ['3D architectural modeling', 'Building visualization', 'Exterior concepts', 'Interior concepts'],
-  },
-  {
-    id: 'map-planning',
-    icon: 'map',
-    title: 'Map Planning',
-    points: ['Site planning', 'Land-use planning', 'Road network layouts', 'Housing scheme layouts'],
-  },
-  {
-    id: 'master-planning',
-    icon: 'landmark',
-    title: 'Master Planning',
-    points: ['Residential development layouts', 'Commercial site planning', 'Urban development concepts', 'Landscape planning'],
-  },
-] as const;
 
 export const processSteps = [
   { n: '01', title: 'Concept Development', text: 'Brief, site and ambitions are translated into early ideas, massing and spatial strategy.' },
@@ -120,16 +85,17 @@ export const processSteps = [
   { n: '05', title: 'Design Presentation', text: 'Drawings and visuals are organised into clear presentation sets for clients and stakeholders.' },
 ];
 
-/**
- * Skills. `level` (0–100) is intentionally omitted: proficiency bars appear
- * only after the client supplies real values (set `level: 85`, etc.).
- */
+/** Skills. `level` (0–100) is omitted on purpose: bars appear only after real values are supplied. */
 export const skills: { name: string; icon: string; level?: number }[] = [
   { name: 'AutoCAD 2D', icon: 'ruler' },
   { name: 'AutoCAD 3D', icon: 'box' },
   { name: 'Architectural Drafting', icon: 'pen' },
-  { name: '3D Modeling', icon: 'layers' },
+  { name: 'Architectural Visualization', icon: 'layers' },
   { name: 'Site Planning', icon: 'compass' },
   { name: 'Master Planning', icon: 'landmark' },
   { name: 'Technical Documentation', icon: 'file' },
 ];
+
+/** Shown on every service page. Edit to match your real scope of work. */
+export const scopeNote =
+  'Drawings are prepared as design and drafting documentation. Statutory approvals and any licensed professional sign-off that a project requires are handled by appropriately registered professionals.';

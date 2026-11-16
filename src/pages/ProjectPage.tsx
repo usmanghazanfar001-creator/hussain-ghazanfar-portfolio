@@ -1,196 +1,135 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Maximize2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import Breadcrumbs from '../components/Breadcrumbs';
 import Lightbox, { type LightboxItem } from '../components/Lightbox';
-import { Reveal, RevealImage } from '../components/Reveal';
+import Picture from '../components/Picture';
+import { Reveal } from '../components/Reveal';
 import Seo from '../components/Seo';
-import { site } from '../data/site';
 import { categoryLabel, getProject, projects, type Project } from '../data/projects';
+import { serviceForCategory } from '../data/services';
+import { contact } from '../data/site';
+import { track } from '../lib/analytics';
+import { projectMeta } from '../lib/routes';
 import NotFound from './NotFound';
 
-interface Section {
-  id: string;
-  title: string;
-  items: LightboxItem[];
-}
+type Group = { title: string; items: LightboxItem[] };
 
-function buildSections(p: Project): Section[] {
-  const { technicalDrawings, plans2d, visualizations3d, gallery } = p.images;
+function groups(p: Project): Group[] {
+  const i = p.images;
   return [
-    { id: 'drawings', title: 'Technical Drawings', items: technicalDrawings ?? [] },
-    { id: 'plans', title: '2D Plans', items: plans2d ?? [] },
-    { id: 'renders', title: '3D Visualizations', items: visualizations3d ?? [] },
-    { id: 'gallery', title: 'Project Gallery', items: gallery ?? [] },
-  ].filter((s) => s.items.length > 0);
+    { title: 'Technical drawings', items: i.technicalDrawings ?? [] },
+    { title: '2D plans', items: i.plans2d ?? [] },
+    { title: '3D visualizations', items: i.visualizations3d ?? [] },
+    { title: 'Gallery', items: i.gallery ?? [] },
+  ].filter((g) => g.items.length > 0);
 }
 
 export default function ProjectPage() {
   const { slug = '' } = useParams();
   const project = getProject(slug);
-  const [open, setOpen] = useState<number | null>(null);
-
-  const sections = useMemo(() => (project ? buildSections(project) : []), [project]);
-  // One flat list so the lightbox can step through every image on the page: main image first.
-  const flat: LightboxItem[] = useMemo(
-    () => (project ? [{ image: project.images.main, caption: project.title }, ...sections.flatMap((s) => s.items)] : []),
-    [project, sections],
-  );
-  const close = useCallback(() => setOpen(null), []);
-
   if (!project) return <NotFound />;
+  return <Detail project={project} />;
+}
 
-  const i = projects.findIndex((p) => p.slug === project.slug);
-  const prev = projects[(i - 1 + projects.length) % projects.length];
-  const next = projects[(i + 1) % projects.length];
+function Detail({ project }: { project: Project }) {
+  const meta = useMemo(() => projectMeta(project), [project]);
+  const sets = useMemo(() => groups(project), [project]);
+  const all = useMemo(() => [{ image: project.images.main, caption: project.title }, ...sets.flatMap((g) => g.items)], [sets, project]);
+  const [open, setOpen] = useState<number | null>(null);
+  const service = serviceForCategory(project.category);
+  const idx = projects.findIndex((p) => p.slug === project.slug);
+  const prev = projects[(idx - 1 + projects.length) % projects.length];
+  const next = projects[(idx + 1) % projects.length];
+
+  useEffect(() => {
+    track('view_project', { project: project.slug, category: project.category });
+  }, [project.slug, project.category]);
+
   let offset = 1;
-  const tallMain = project.images.main.height > project.images.main.width * 1.1;
-  const base = site.url.replace(/\/$/, '');
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${base}/` },
-          { '@type': 'ListItem', position: 2, name: 'Projects', item: `${base}/#projects` },
-          { '@type': 'ListItem', position: 3, name: project.title, item: `${base}/projects/${project.slug}` },
-        ],
-      },
-      {
-        '@type': 'CreativeWork',
-        name: project.title,
-        description: project.summary,
-        genre: categoryLabel(project.category),
-        creator: { '@type': 'Person', name: site.name },
-        image: `${base}${project.images.main.src}`,
-      },
-    ],
-  };
-
   return (
     <article>
-      <Seo title={project.title} description={project.summary} path={`/projects/${project.slug}`} image={project.images.main.src} jsonLd={jsonLd} />
-
-      <header className="container-page pb-12 pt-32 md:pt-40">
-        <Link to={{ pathname: '/', hash: '#projects' }} className="label inline-flex items-center gap-2 text-muted-strong transition-colors hover:text-ink">
-          <ArrowLeft size={14} aria-hidden="true" /> All projects
-        </Link>
-        <p className="label mt-10 text-accent-deep">{categoryLabel(project.category)}</p>
-        <h1 className="mt-4 max-w-5xl font-display text-[clamp(2.8rem,8vw,7rem)] font-medium leading-[0.95]">{project.title}</h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-graphite">{project.summary}</p>
-        {project.placeholder && (
-          <p className="label mt-8 inline-block border border-dashed border-accent-deep/60 px-4 py-2 !text-[10px] text-accent-deep">
-            Placeholder project — not real client work
-          </p>
-        )}
+      <Seo meta={meta} />
+      <header className="bg-ink pb-16 pt-36 text-paper" data-dark>
+        <div className="container-page">
+          <Breadcrumbs dark items={[{ label: 'Home', to: '/' }, { label: 'Projects', to: { pathname: '/', hash: '#projects' } }, { label: project.title }]} />
+          <p className="label mt-10 text-accent">{categoryLabel(project.category)}</p>
+          <h1 className="mt-4 font-display text-[clamp(2.8rem,7vw,6.5rem)] font-medium leading-none">{project.title}</h1>
+          <p className="mt-6 max-w-2xl text-lg text-paper/80">{project.summary}</p>
+          {project.placeholder && <p className="label mt-6 inline-block border border-accent px-3 py-2 text-accent">Sample project — replace with real work</p>}
+        </div>
       </header>
 
-      <div className="container-page">
-        <button
-          type="button"
-          onClick={() => setOpen(0)}
-          className="group relative block w-full overflow-hidden bg-line"
-          aria-label={`Open ${project.title} main image full screen`}
-        >
-          <RevealImage
-            image={project.images.main}
-            eager
-            sizes="100vw"
-            fit={tallMain ? 'contain' : 'cover'}
-            className={tallMain ? 'aspect-[4/5] w-full md:aspect-[16/9]' : 'aspect-[16/9] w-full md:aspect-[16/8]'}
-          />
-          <span className="label absolute bottom-4 right-4 flex items-center gap-2 bg-paper px-3 py-2 text-ink opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-            <Maximize2 size={14} aria-hidden="true" /> Full screen
-          </span>
+      <div className="container-page -mt-px">
+        <button type="button" onClick={() => setOpen(0)} className="group relative block aspect-[16/9] w-full overflow-hidden bg-line" aria-label={`Open image viewer for ${project.title}`}>
+          <Picture image={project.images.main} eager sizes="100vw" className="h-full w-full" />
         </button>
       </div>
 
-      <section className="container-page grid gap-14 py-24 lg:grid-cols-12 md:py-32">
-        <Reveal className="lg:col-span-4">
-          <dl className="border-t border-ink">
+      <div className="container-page grid gap-16 py-20 lg:grid-cols-12">
+        <div className="lg:col-span-7">
+          <h2 className="font-display text-4xl">Project overview</h2>
+          <p className="mt-5 text-lg leading-relaxed text-graphite">{project.overview}</p>
+          <h2 className="mt-14 font-display text-4xl">Design objectives</h2>
+          <ul className="mt-5 space-y-3">
+            {project.objectives.map((o) => (
+              <li key={o} className="flex gap-4 text-graphite"><span className="mt-3 h-px w-6 shrink-0 bg-accent-deep" aria-hidden="true" />{o}</li>
+            ))}
+          </ul>
+        </div>
+        <aside className="lg:col-span-5" aria-label="Project details">
+          <dl className="divide-y divide-line border-y border-line">
             {project.details.map((d) => (
-              <div key={d.label} className="flex justify-between gap-6 border-b border-line py-4">
+              <div key={d.label} className="flex justify-between gap-6 py-4">
                 <dt className="label text-muted-strong">{d.label}</dt>
-                <dd className={`text-right text-sm ${d.value === 'To be provided' ? 'italic text-muted-strong' : 'text-ink'}`}>{d.value}</dd>
+                <dd className="text-right">{d.value}</dd>
               </div>
             ))}
           </dl>
-        </Reveal>
-        <div className="lg:col-span-7 lg:col-start-6">
-          <Reveal>
-            <p className="label text-accent-deep">Project overview</p>
-            <p className="mt-5 font-display text-3xl leading-snug md:text-4xl">{project.overview}</p>
-          </Reveal>
-          <Reveal delay={0.1} className="mt-14">
-            <p className="label mb-5 text-accent-deep">Design objectives</p>
-            <ol>
-              {project.objectives.map((o, n) => (
-                <li key={o} className="flex gap-5 border-t border-line py-4 text-graphite">
-                  <span className="label pt-1 text-accent-deep">0{n + 1}</span>
-                  {o}
+          {service && (
+            <Link to={`/services/${service.slug}`} className="label mt-8 inline-flex items-center gap-2 border-b border-ink pb-1 hover:text-accent-deep">
+              Related service: {service.title} <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          )}
+        </aside>
+      </div>
+
+      {sets.map((g) => {
+        const start = offset;
+        offset += g.items.length;
+        return (
+          <section key={g.title} className="container-page pb-20" aria-label={g.title}>
+            <Reveal><h2 className="font-display text-4xl">{g.title}</h2></Reveal>
+            <ul className="mt-8 grid gap-6 sm:grid-cols-2">
+              {g.items.map((it, i) => (
+                <li key={it.caption}>
+                  <button type="button" onClick={() => setOpen(start + i)} className="block w-full text-left" aria-label={`Enlarge: ${it.caption}`}>
+                    <span className="block aspect-[4/3] overflow-hidden bg-line"><Picture image={it.image} sizes="(min-width:640px) 50vw, 100vw" className="h-full w-full transition-transform duration-700 hover:scale-[1.03]" /></span>
+                    <span className="label mt-3 block text-muted-strong">{it.caption}</span>
+                  </button>
                 </li>
               ))}
-            </ol>
-          </Reveal>
-        </div>
-      </section>
-
-      {sections.map((s, n) => {
-        const start = offset;
-        offset += s.items.length;
-        return (
-          <section key={s.id} className={`py-20 md:py-28 ${n % 2 === 0 ? 'bg-surface' : ''}`} aria-labelledby={`h-${s.id}`}>
-            <div className="container-page">
-              <Reveal>
-                <p className="label text-accent-deep">0{n + 1}</p>
-                <h2 id={`h-${s.id}`} className="mt-3 font-display text-4xl font-medium md:text-5xl">
-                  {s.title}
-                </h2>
-              </Reveal>
-              <ul className={`mt-12 grid gap-8 ${s.items.length > 1 ? 'md:grid-cols-2' : ''}`}>
-                {s.items.map((it, k) => (
-                  <li key={it.caption + k}>
-                    <button
-                      type="button"
-                      onClick={() => setOpen(start + k)}
-                      className="group block w-full text-left"
-                      aria-label={`Open full screen: ${it.caption}`}
-                    >
-                      <RevealImage
-                        image={it.image}
-                        sizes="(min-width:768px) 50vw, 100vw"
-                        fit={it.image.height > it.image.width * 1.1 ? 'contain' : 'cover'}
-                        className="aspect-[16/10] w-full border border-line"
-                        imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
-                      />
-                      <span className="label mt-4 block text-muted-strong">{it.caption}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            </ul>
           </section>
         );
       })}
 
-      <nav className="border-t border-line" aria-label="More projects">
-        <div className="container-page grid md:grid-cols-2">
-          <Link to={`/projects/${prev.slug}`} className="group border-b border-line py-12 md:border-b-0 md:border-r md:pr-10">
-            <p className="label flex items-center gap-2 text-muted-strong">
-              <ArrowLeft size={14} aria-hidden="true" /> Previous
-            </p>
-            <p className="mt-3 font-display text-3xl transition-colors group-hover:text-accent-deep md:text-4xl">{prev.title}</p>
-          </Link>
-          <Link to={`/projects/${next.slug}`} className="group py-12 md:pl-10 md:text-right">
-            <p className="label flex items-center gap-2 text-muted-strong md:justify-end">
-              Next <ArrowRight size={14} aria-hidden="true" />
-            </p>
-            <p className="mt-3 font-display text-3xl transition-colors group-hover:text-accent-deep md:text-4xl">{next.title}</p>
-          </Link>
+      <section className="bg-surface py-16">
+        <div className="container-page flex flex-wrap items-center justify-between gap-8">
+          <Link to={`/projects/${prev.slug}`} className="group flex items-center gap-3"><ArrowLeft size={18} aria-hidden="true" /><span><span className="label block text-muted-strong">Previous</span>{prev.title}</span></Link>
+          <Link to={{ pathname: '/', hash: '#contact' }} className="btn btn-solid">{contact.cta}</Link>
+          <Link to={`/projects/${next.slug}`} className="group flex items-center gap-3 text-right"><span><span className="label block text-muted-strong">Next</span>{next.title}</span><ArrowRight size={18} aria-hidden="true" /></Link>
         </div>
-      </nav>
+      </section>
 
-      <Lightbox items={flat} index={open} onClose={close} onChange={setOpen} />
+      {open !== null && (
+        <Lightbox
+          items={all}
+          index={open}
+          onIndex={setOpen}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </article>
   );
 }
