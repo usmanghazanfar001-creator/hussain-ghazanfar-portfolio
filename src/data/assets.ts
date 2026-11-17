@@ -82,7 +82,23 @@ export const heroSlides = [
   { id: 'render', label: 'Visualization', image: render },
 ] as const;
 
+/** Real project images supplied by the owner. */
+const real = {
+  commercialSheet: raster('/assets/projects/commercial-shopfront-design-sheet', 'Design sheet for a two-storey commercial building: street render, ground and first floor plans measuring 60 by 30 feet, and views of the entrance, balcony and side', 736, 1101, 480, '50% 0%'),
+  residentialSheet: raster('/assets/projects/residential-elevation-section-plans-sheet', 'Drawing sheet with the front elevation, section A-A, ground floor plan and first floor plan of a two-storey house', 1200, 675, 640, '50% 50%'),
+  massingSketch: raster('/assets/projects/massing-development-concept-sketch', 'Hand-rendered concept sketch showing a simple box developed in five steps into a two-storey house, with a coloured perspective below', 564, 564, 400, '50% 72%'),
+  rowSection: raster('/assets/projects/road-right-of-way-cross-section', 'Road right-of-way cross-section with carriageway, median, shoulders, side slopes and a dimension table for urban, rural and highway roads', 1080, 1243, 640, '50% 12%'),
+  walkthroughPoster: raster('/assets/projects/home-3d-walkthrough-poster', 'Aerial 3D model of a furnished narrow-plot house showing living room, dining area, bedrooms, bathroom and garage', 720, 1280, 480, '50% 30%'),
+};
+
+export const walkthroughVideo = {
+  src: '/assets/video/home-3d-walkthrough.mp4',
+  width: 720,
+  height: 1280,
+};
+
 export const img = {
+  ...real,
   sketch,
   render,
   commercialFacade: svg('commercial-facade-concept', 'Sample commercial tower facade with vertical fins above a glass podium'),

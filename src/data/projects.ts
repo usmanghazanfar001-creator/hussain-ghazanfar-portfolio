@@ -1,12 +1,12 @@
 /**
  * PROJECT DATA — central file for every project.
  *
- * All projects below are SAMPLES (`placeholder: true`). They are not client work and never
+ * Entries with `placeholder: true` are SAMPLES; the others use the owner's real images. They are not client work and never
  * claim real names, locations or clients. Placeholder pages are set to `noindex` and left out
  * of sitemap.xml automatically. To publish a real project: replace the text and images,
  * set `placeholder: false`, and it becomes indexable on the next build.
  */
-import { img, type ImageAsset } from './assets';
+import { img, walkthroughVideo, type ImageAsset } from './assets';
 
 export type CategoryId = 'architecture' | 'autocad-2d' | 'autocad-3d' | 'visualization' | 'map-planning' | 'master-planning';
 
@@ -34,6 +34,8 @@ export interface Project {
   /** "To be provided" is shown for values that are not verified yet. */
   details: { label: string; value: string }[];
   placeholder: boolean;
+  /** Optional walkthrough video (muted-friendly, loads only on play). */
+  video?: { src: string; width: number; height: number; poster: ImageAsset; caption: string };
   images: {
     main: ImageAsset;
     technicalDrawings?: Captioned[];
@@ -72,19 +74,22 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'commercial-facade-study',
-    title: 'Commercial Facade Study',
+    slug: 'commercial-shopfront-design',
+    title: 'Commercial Shopfront Design',
     category: 'architecture',
-    summary: 'Sample: a minimalist commercial tower with vertical fins over a glazed podium.',
-    overview: sampleOverview('commercial architecture'),
-    objectives: ['Define the commercial programme and floor efficiency', 'Explain the facade strategy and solar control', 'Describe street-level interaction'],
-    details: baseDetails('Commercial architecture'),
-    placeholder: true,
+    summary: 'A two-storey commercial building with four ground-floor shops, glazed shopfronts, timber-clad columns and a first-floor balcony.',
+    overview:
+      'A design sheet for a two-storey commercial building on a 60 ft by 30 ft footprint. It pairs the street-level render with ground and first floor plans, and close views of the entrance, balcony and side elevation.',
+    objectives: [],
+    details: [
+      { label: 'Type', value: 'Commercial architecture' },
+      { label: 'Plan size', value: "60' × 30'" },
+      { label: 'Ground floor', value: "Four shops, each 14' × 26'" },
+    ],
+    placeholder: false,
     images: {
-      main: img.commercialFacade,
-      technicalDrawings: [{ image: img.elevation, caption: 'Facade elevation (sample)' }],
-      visualizations3d: [{ image: img.massing, caption: 'Massing study (sample)' }],
-      gallery: [{ image: img.commercialFacade, caption: 'Street view (sample)' }],
+      main: img.commercialSheet,
+      plans2d: [{ image: img.commercialSheet, caption: 'Ground and first floor plans, with exterior render and detail views' }],
     },
   },
   {
@@ -103,18 +108,21 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'elevation-section-package',
-    title: 'Elevation & Section Package',
+    slug: 'residential-drawing-set',
+    title: 'Residential Drawing Set',
     category: 'autocad-2d',
-    summary: 'Sample: technical elevations and sections with level markers and dimensions.',
-    overview: sampleOverview('technical drawing'),
-    objectives: ['Describe the level of detail required', 'Explain annotation and dimensioning approach', 'Note issue and revision control'],
-    details: baseDetails('AutoCAD 2D drafting'),
-    placeholder: true,
+    summary: 'Front elevation, section A-A and ground and first floor plans of a two-storey house, fully dimensioned.',
+    overview:
+      'A single drawing sheet that coordinates the front elevation, the building section, and the ground and first floor plans of a two-storey residence, with dimensions, door and window tags, and room labels.',
+    objectives: [],
+    details: [
+      { label: 'Type', value: 'AutoCAD 2D drafting' },
+      { label: 'Sheet contents', value: 'Front elevation, section A-A, ground and first floor plans' },
+    ],
+    placeholder: false,
     images: {
-      main: img.elevation,
-      technicalDrawings: [{ image: img.elevation, caption: 'Front elevation (sample)' }, { image: img.section, caption: 'Section A-A (sample)' }],
-      plans2d: [{ image: img.planFirst, caption: 'Reference plan (sample)' }],
+      main: img.residentialSheet,
+      technicalDrawings: [{ image: img.residentialSheet, caption: 'Front elevation, section A-A and floor plans' }],
     },
   },
   {
@@ -161,32 +169,42 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'chalk-sketch-concept',
-    title: 'Chalk Sketch Concept',
+    slug: 'concept-sketch-form-development',
+    title: 'Concept Sketch: Form Development',
     category: 'visualization',
-    summary: 'Sample: a chalk-style concept sketch of a modern house with a butterfly roof and stone walls.',
-    overview: sampleOverview('concept sketch'),
-    objectives: ['Describe the design idea behind the sketch', 'Explain how the sketch develops into plans and 3D views', 'Note the drawing medium and process'],
-    details: baseDetails('Concept sketch'),
-    placeholder: true,
+    summary: 'A hand-rendered sketch that grows a simple box into a two-storey house in five steps, finished with a coloured perspective.',
+    overview:
+      'A concept sketch that shows how a design develops: a plain volume is cut, offset and stacked step by step, then drawn as a rendered perspective with a cantilevered upper floor, timber doors and a landscaped forecourt.',
+    objectives: [],
+    details: [
+      { label: 'Type', value: 'Concept sketch' },
+      { label: 'Process', value: 'Five-step massing development, then perspective' },
+    ],
+    placeholder: false,
     images: {
-      main: img.sketch,
-      visualizations3d: [{ image: img.sketch, caption: 'Concept sketch (sample)' }, { image: img.render, caption: 'Rendered visualization (sample)' }],
+      main: img.massingSketch,
+      gallery: [
+        { image: img.sketch, caption: 'Chalk-style concept sketch of a modern house' },
+        { image: img.render, caption: 'Rendered visualization of the house at sunset' },
+      ],
     },
   },
   {
-    slug: 'interior-visualization',
-    title: 'Interior Visualization',
+    slug: 'home-3d-walkthrough',
+    title: '3D Home Walkthrough',
     category: 'visualization',
-    summary: 'Sample: an atmospheric evening interior concept with a warm window glow.',
-    overview: sampleOverview('interior visualization'),
-    objectives: ['Describe the interior concept and material palette', 'Explain lighting intent', 'Show the relationship to the architectural plan'],
-    details: baseDetails('Interior visualization'),
-    placeholder: true,
+    summary: 'An aerial 3D walkthrough of a furnished narrow-plot house: living, dining, bedrooms, bathroom, wardrobe and garage.',
+    overview:
+      'A furnished 3D model of a narrow-plot house, presented as a moving aerial walkthrough. The camera travels through the garage, entry, living and dining spaces, bedroom, wardrobe and bathroom so the layout can be understood room by room.',
+    objectives: [],
+    details: [
+      { label: 'Type', value: '3D interior visualization' },
+      { label: 'Format', value: 'Video walkthrough, about 27 seconds' },
+    ],
+    placeholder: false,
+    video: { ...walkthroughVideo, poster: img.walkthroughPoster, caption: 'Aerial walkthrough of the furnished 3D model' },
     images: {
-      main: img.interiorEvening,
-      visualizations3d: [{ image: img.interiorEvening, caption: 'Evening view (sample)' }],
-      plans2d: [{ image: img.planFurnished, caption: 'Reference plan (sample)' }],
+      main: img.walkthroughPoster,
     },
   },
   {
@@ -205,18 +223,23 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'road-network-study',
-    title: 'Road Network Study',
+    slug: 'road-right-of-way-cross-section',
+    title: 'Road Right-of-Way Cross-Section',
     category: 'map-planning',
-    summary: 'Sample: an arterial, collector and local road hierarchy with junction nodes.',
-    overview: sampleOverview('road network planning'),
-    objectives: ['Describe the movement hierarchy', 'Explain junction and roundabout strategy', 'Note connections to the wider network'],
-    details: baseDetails('Road network layout'),
-    placeholder: true,
+    summary: 'A road cross-section with a 14.6 m carriageway, 2.0 m median, 2.5 m shoulders and cut and fill slopes, plus an urban, rural and highway dimension table.',
+    overview:
+      'A cross-section of a divided road corridor annotated with carriageway, median, shoulders, side slopes and right of way. A dimension table compares lane width, shoulder, median and slopes for urban, rural and highway roads.',
+    objectives: [],
+    details: [
+      { label: 'Type', value: 'Road and site planning' },
+      { label: 'Carriageway', value: '14.6 m' },
+      { label: 'Lanes', value: '3.65 m each' },
+      { label: 'Median', value: '2.0 m' },
+    ],
+    placeholder: false,
     images: {
-      main: img.roadNetwork,
-      plans2d: [{ image: img.roadNetwork, caption: 'Network layout (sample)' }],
-      gallery: [{ image: img.sitePlan, caption: 'Related site plan (sample)' }],
+      main: img.rowSection,
+      technicalDrawings: [{ image: img.rowSection, caption: 'Right-of-way cross-section and dimension table' }],
     },
   },
   {

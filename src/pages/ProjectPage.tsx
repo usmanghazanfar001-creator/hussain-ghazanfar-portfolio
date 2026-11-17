@@ -61,21 +61,50 @@ function Detail({ project }: { project: Project }) {
       </header>
 
       <div className="container-page -mt-px">
-        <button type="button" onClick={() => setOpen(0)} className="group relative block aspect-[16/9] w-full overflow-hidden bg-line" aria-label={`Open image viewer for ${project.title}`}>
-          <Picture image={project.images.main} eager sizes="100vw" className="h-full w-full" />
-        </button>
+        {project.video ? (
+          <figure className="bg-ink">
+            <video
+              controls
+              playsInline
+              preload="none"
+              poster={project.video.poster.src}
+              width={project.video.width}
+              height={project.video.height}
+              className="mx-auto block max-h-[85vh] w-auto max-w-full"
+              aria-label={project.video.caption}
+            >
+              <source src={project.video.src} type="video/mp4" />
+              Your browser does not support embedded video.
+            </video>
+            <figcaption className="label px-4 py-3 text-center text-paper/75">{project.video.caption}</figcaption>
+          </figure>
+        ) : (
+          <button type="button" onClick={() => setOpen(0)} className="group relative block aspect-[16/9] w-full overflow-hidden bg-line" aria-label={`Open image viewer for ${project.title}`}>
+            <Picture
+              image={project.images.main}
+              eager
+              sizes="100vw"
+              fit={project.images.main.width / project.images.main.height < 1.4 ? 'contain' : 'cover'}
+              className="h-full w-full"
+            />
+          </button>
+        )}
       </div>
 
       <div className="container-page grid gap-16 py-20 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <h2 className="font-display text-4xl">Project overview</h2>
           <p className="mt-5 text-lg leading-relaxed text-graphite">{project.overview}</p>
-          <h2 className="mt-14 font-display text-4xl">Design objectives</h2>
-          <ul className="mt-5 space-y-3">
-            {project.objectives.map((o) => (
-              <li key={o} className="flex gap-4 text-graphite"><span className="mt-3 h-px w-6 shrink-0 bg-accent-deep" aria-hidden="true" />{o}</li>
-            ))}
-          </ul>
+          {project.objectives.length > 0 && (
+            <>
+              <h2 className="mt-14 font-display text-4xl">Design objectives</h2>
+              <ul className="mt-5 space-y-3">
+                {project.objectives.map((o) => (
+                  <li key={o} className="flex gap-4 text-graphite"><span className="mt-3 h-px w-6 shrink-0 bg-accent-deep" aria-hidden="true" />{o}</li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
         <aside className="lg:col-span-5" aria-label="Project details">
           <dl className="divide-y divide-line border-y border-line">

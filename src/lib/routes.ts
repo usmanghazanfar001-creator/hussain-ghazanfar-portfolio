@@ -65,7 +65,7 @@ export function homeMeta(): RouteMeta {
       lead: heroCopy.text,
       sections: [
         { heading: 'Services', items: services.map((s) => `${s.title}: ${s.short}`) },
-        { heading: 'Projects', paragraphs: ['Sample project pages showing how architectural design, AutoCAD drawings, visualization and planning work is presented.'] },
+        { heading: 'Projects', paragraphs: ['Selected architectural design, AutoCAD drawing, visualization and road and site planning work. Entries marked Sample show how further projects will be presented.'] },
       ],
       links: [...serviceLinks(), ...projectLinks()],
     },
@@ -121,7 +121,7 @@ export function projectMeta(p: Project): RouteMeta {
         { heading: 'Project overview', paragraphs: [p.overview] },
         { heading: 'Design objectives', items: p.objectives },
         { heading: 'Project details', items: p.details.filter((d) => d.value !== TBP).map((d) => `${d.label}: ${d.value}`) },
-      ],
+      ].filter((sec) => (sec.items && sec.items.length > 0) || (sec.paragraphs && sec.paragraphs.length > 0)),
       links: [{ href: '/', label: 'Home' }, ...projectLinks()],
     },
   };
