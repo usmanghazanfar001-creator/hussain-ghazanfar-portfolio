@@ -10,12 +10,17 @@ function htmlEnv(env: Record<string, string>): Plugin {
   const site = (env.VITE_SITE_URL || 'https://www.example.com').replace(/\/$/, '');
   return {
     name: 'html-env',
-    transformIndexHtml(html) {
+    // order: 'pre' — must run BEFORE Vite parses the HTML, otherwise it tries to decode the
+    // literal "%SITE_URL%" in href/content attributes and fails with "URI malformed".
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html: string) {
       const extra: string[] = [];
       if (env.VITE_BING_VERIFICATION) {
         extra.push(`<meta name="msvalidate.01" content="${env.VITE_BING_VERIFICATION}" />`);
       }
       return html.split('%SITE_URL%').join(site).replace('<!--ENV_META-->', extra.join('\n    '));
+      },
     },
   };
 }
