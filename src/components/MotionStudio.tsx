@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { Pause, Play } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 
 const CYCLE_MS = 11000;
-const d = (s: number) => ({ '--d': `${s}s` }) as React.CSSProperties;
-const dt = (s: number, t: number) => ({ '--d': `${s}s`, '--t': `${t}s` }) as React.CSSProperties;
+const d = (s: number) => ({ '--d': `${s}s` }) as CSSProperties;
+const dt = (s: number, t: number) => ({ '--d': `${s}s`, '--t': `${t}s` }) as CSSProperties;
 
 /** Floor plan drawn line by line. pathLength=1 lets one dash rule animate every path. */
 function PlanDrawing() {

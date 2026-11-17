@@ -18,5 +18,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 );
 
 // Analytics loads after the page is idle and only when VITE_GA_ID is set.
-const idle = (cb: () => void) => ('requestIdleCallback' in window ? window.requestIdleCallback(cb) : window.setTimeout(cb, 1500));
+const idle = (cb: () => void) => {
+  const w = window as Window & { requestIdleCallback?: (fn: () => void) => number };
+  if (typeof w.requestIdleCallback === 'function') w.requestIdleCallback(cb);
+  else setTimeout(cb, 1500);
+};
 window.addEventListener('load', () => idle(initAnalytics));
